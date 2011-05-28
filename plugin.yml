@@ -1,0 +1,8 @@
+name: FriendList
+main: net.thedarktide.celeo.friendlist.FriendList
+author: Celeo
+version: 0.2
+commands:
+  friendlist:
+    description: Commands
+    usage: /<command> <parameters>
