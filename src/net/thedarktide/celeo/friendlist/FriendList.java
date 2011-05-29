@@ -32,6 +32,7 @@ import org.bukkit.ChatColor;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 public class FriendList extends JavaPlugin {
@@ -70,12 +71,60 @@ public class FriendList extends JavaPlugin {
 		if(sender instanceof Player)
 		{
 			Player player = (Player)sender;
-			if(commandLabel.equalsIgnoreCase("friendlist"))
+			if(commandLabel.equalsIgnoreCase("friendlist") && args.length >= 0)
 			{
-				
+				if(args[0].equalsIgnoreCase("-see") || args[0].equalsIgnoreCase("-view"))
+				{
+					if(Util.friendList.get(player) != null)
+					{
+						String list = null;
+						for(String str : Util.friendList.get(player))
+						{
+							list += str + " ";
+						}
+						player.sendMessage(list);
+					}
+					else
+					{
+						player.sendMessage("You don't have any people in your friend list.");
+					}
+				}
+				if(args[0].equalsIgnoreCase("-a") || args[0].equalsIgnoreCase("-add")){
+					if(args.length >= 1)
+					{
+						if(Util.friendList.get(player) == null)
+						{
+							String temp[] = {""};
+							Util.friendList.put(player, temp);
+						}
+						int oldLength = Util.friendList.get(player).length;
+						String[] oldFriends = Util.friendList.get(player);
+						int newLength = (args.length - 2) + (Util.friendList.get(player).length);
+						String[] newFriends = new String[newLength];
+						int arrayCounter = 3;
+						
+						for(int i = 0; i < oldLength; i++)
+						{
+							newFriends[i] = oldFriends[i];
+						}
+						
+						for(int i = oldLength; i < newLength; i++)
+						{
+							newFriends[i] = args[arrayCounter];
+							arrayCounter++;
+						}
+						Util.friendList.put(player, newFriends);
+					}
+				}
+				if(args[0].equalsIgnoreCase("-r") || args[0].equalsIgnoreCase("-remove")){
+					if(args.length >= 1)
+					{
+						
+					}
+				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 }
