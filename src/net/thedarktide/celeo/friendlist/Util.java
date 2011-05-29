@@ -19,13 +19,15 @@
 package net.thedarktide.celeo.friendlist;
 
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Util {
 	
 	public final FriendList plugin;
 	
-	public static HashMap<Player, String[]> friendList = new HashMap<Player, String[]>();
+	public static HashMap<Player, ArrayList<String>> friendList = new HashMap<Player, ArrayList<String>>();
 	
 	public Util(FriendList instance){
 		plugin = instance;

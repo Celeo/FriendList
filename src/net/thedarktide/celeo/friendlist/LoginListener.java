@@ -33,10 +33,15 @@ public class LoginListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		//check who has this person on their friendlist,
-		//if they do, then send the standard join message
-		//to just that person, not everyone
 		event.setJoinMessage(null);
+		
+		for(Player p : event.getPlayer().getServer().getOnlinePlayers())
+		{
+			if(Util.friendList.get(p).contains(player))
+			{
+				p.sendMessage(player + " has logged in.");
+			}
+		}
 	}
 		
 }

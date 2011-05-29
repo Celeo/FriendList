@@ -32,6 +32,7 @@ import org.bukkit.ChatColor;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -72,6 +73,10 @@ public class FriendList extends JavaPlugin {
 			}
 	}
 	
+	public void sendMessage(String[] recepients){
+		
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if(sender instanceof Player)
 		{
@@ -85,60 +90,49 @@ public class FriendList extends JavaPlugin {
 						String list = null;
 						for(String str : Util.friendList.get(player))
 						{
-							list += str + " ";	//build list of friends from Util.friendList.get(player)
+							list += str + " ";
 						}
 						if(list != "")
 							player.sendMessage(list);
 					}
 					else
 					{
-						player.sendMessage("You don't have any people in your friend list."); //nothing in the friend list
+						player.sendMessage("You don't have any people in your friend list.");
 					}
 				}
+				
 				if(args[0].equalsIgnoreCase("-a") || args[0].equalsIgnoreCase("-add"))
 				{
-					//odd bit of code here, not quite working
 					if(args.length >= 1)
 					{
-						if(Util.friendList.get(player) == null) //if friend list is null
+						ArrayList<String> temp = Util.friendList.get(player);
+						for(int i = 3; i < args.length; i++)
 						{
-							String temp[] = {""};
-							Util.friendList.put(player, temp); //put something in it before we start
+							temp.add(args[i]);
 						}
-						int oldLength = Util.friendList.get(player).length; //length of current string[] in Util.friendList
-						String[] oldFriends = Util.friendList.get(player);	//creating a temp variable of the player's string[]
-						int newLength = (args.length - 2) + (Util.friendList.get(player).length);	//new string[] length var
-						String[] newFriends = new String[newLength];	//create new string[] for Util.friendList.get(player)
-						int arrayCounter = 3;	//int to save where in the args we are
-						
-						for(int i = 0; i < oldLength; i++) //for all the values in oldFriends, put them into newFriends
-						{
-							newFriends[i] = oldFriends[i];
-						}
-						
-						for(int i = oldLength; i < newLength; i++) //fill in the rest of the values from input args
-						{
-							newFriends[i] = args[arrayCounter];
-							arrayCounter++;
-						}
-						Util.friendList.put(player, newFriends);
+						Util.friendList.put(player, temp);
 					}
 				}
+				
 				if(args[0].equalsIgnoreCase("-rem") || args[0].equalsIgnoreCase("-remove"))
 				{
 					if(args.length >= 1)
 					{
-						
+						ArrayList<String> temp = Util.friendList.get(player);
+						for(int i = 3; i < args.length; i++)
+						{
+							temp.remove(args[i]);
+						}
 					}
 				}
 				if(args[0].equalsIgnoreCase("-clear") && args.length == 1)
 				{
 					if(args[1].equalsIgnoreCase("-yes")) //-yes is simply an extra conformation from the user 
 					{
-						String[] temp = {""};
+						ArrayList<String> temp = null;
 						try
 						{
-							Util.friendList.put(player, temp); //puts a blank value into the list for the player
+							Util.friendList.put(player, temp);
 						}
 						catch (Exception ex)
 						{
