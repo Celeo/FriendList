@@ -44,12 +44,14 @@ public class FriendList extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		log.info("[Friend List] plugin <disabled>");
+		//save info
 	}
 
 	@Override
 	public void onEnable() {
 		log.info("[Friend List] plugin <enabled>");
-		setupPermissions();
+		//setupPermissions();
+		Util.load(this);
 		PluginManager mngr = getServer().getPluginManager();
 		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
@@ -132,17 +134,20 @@ public class FriendList extends JavaPlugin {
 							Util.friendList.put(player, temp);
 							player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 						}
-						ArrayList<String> temp = Util.friendList.get(player);
-						ArrayList<String> playersRemoved = new ArrayList<String>();
-						if(temp != null)
+						else
 						{
-							for(int i = 1; i < args.length; i++)
-						{
-							temp.add(args[i]);
-							playersRemoved.add(args[i]);
-						}
-						Util.friendList.put(player, temp);
-						player.sendMessage(ChatColor.GRAY + (playersRemoved + " removed to your friends list."));
+							ArrayList<String> temp = Util.friendList.get(player);
+							ArrayList<String> playersRemoved = new ArrayList<String>();
+							if(temp != null)
+							{
+								for(int i = 1; i < args.length; i++)
+							{
+								temp.remove(args[i]);
+								playersRemoved.add(args[i]);
+							}
+							Util.friendList.put(player, temp);
+							player.sendMessage(ChatColor.GRAY + (playersRemoved + " removed to your friends list."));
+							}
 						}
 					}
 				}
@@ -161,6 +166,16 @@ public class FriendList extends JavaPlugin {
 							player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 						}
 					}
+				}
+				if(args[0].equalsIgnoreCase("-save"))// && Permissions.has(player, "friendlist.save"))
+				{
+					Util.saveList();
+					player.sendMessage(ChatColor.GRAY + "Friend Lists saved.");
+				}
+				if(args[0].equalsIgnoreCase("-load"))// && Permissions.has(player, "friendlist.load"))
+				{
+					Util.loadList();
+					player.sendMessage(ChatColor.GRAY + "Friend Lists loaded.");
 				}
 			}
 		}
