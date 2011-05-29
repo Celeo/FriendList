@@ -21,6 +21,7 @@ package net.thedarktide.celeo.friendlist;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class QuitListener extends PlayerListener {
 	
@@ -30,11 +31,12 @@ public class QuitListener extends PlayerListener {
 		plugin = instance;
 	}
 	
-	public void onPlayerJoin(PlayerEvent event) {
+	public void onPlayerJoin(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		//check who has this person on their friendlist,
 		//if they do, then send the standard leave message
 		//to just that person, not everyone
+		event.setQuitMessage(null);
 	}
 		
 }
