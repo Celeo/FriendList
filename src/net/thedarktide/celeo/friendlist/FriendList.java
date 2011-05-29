@@ -40,6 +40,9 @@ public class FriendList extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	protected static PermissionHandler Permissions = null;
 	
+	public LoginListener loginListener = new LoginListener(this);
+	public QuitListener quitListener = new QuitListener(this);
+	
 	@Override
 	public void onDisable() {
 		log.info("[Friend List] plugin <disabled>");
@@ -50,6 +53,8 @@ public class FriendList extends JavaPlugin {
 		log.info("[Friend List] plugin <enabled>");
 		setupPermissions();
 		PluginManager mngr = getServer().getPluginManager();
+		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
+		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
 	}
 	
 	public void setupPermissions(){
