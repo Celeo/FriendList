@@ -22,8 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,7 +31,6 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class FriendList extends JavaPlugin {
@@ -58,7 +55,11 @@ public class FriendList extends JavaPlugin {
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
 	}
 	
-	public void setupPermissions(){
+	public static void sendMsg(Player player, String message) {
+		player.sendMessage(message);
+	}
+	
+	public void setupPermissions() {
 		Plugin test = getServer().getPluginManager().getPlugin("Permissions");
 		if(Permissions == null)
 			if(test != null)
@@ -73,21 +74,17 @@ public class FriendList extends JavaPlugin {
 			}
 	}
 	
-	public void sendMessage(String[] recepients){
-		
-	}
-	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		if(sender instanceof Player)
 		{
 			Player player = (Player)sender;
-			if(commandLabel.equalsIgnoreCase("friendlist") && args.length >= 0)
+			if((commandLabel.equalsIgnoreCase("friend") || commandLabel.equalsIgnoreCase("friendlist")) && args.length >= 0)
 			{
-				if(args[0].equalsIgnoreCase("-see") || args[0].equalsIgnoreCase("-view"))
+				if(args[0].equalsIgnoreCase("-see") || args[0].equalsIgnoreCase("-view") || args[0].equalsIgnoreCase("show"))
 				{
 					if(Util.friendList.get(player) != null)
 					{
-						String list = null;
+						String list = "";
 						for(String str : Util.friendList.get(player))
 						{
 							list += str + " ";
@@ -97,7 +94,7 @@ public class FriendList extends JavaPlugin {
 					}
 					else
 					{
-						player.sendMessage("You don't have any people in your friend list.");
+						player.sendMessage(ChatColor.RED + "You don't have any people in your friend list.");
 					}
 				}
 				
@@ -105,12 +102,23 @@ public class FriendList extends JavaPlugin {
 				{
 					if(args.length >= 1)
 					{
+						if(!Util.friendList.containsKey(player))
+						{
+							ArrayList<String> temp = new ArrayList<String>();
+							Util.friendList.put(player, temp);
+						}
 						ArrayList<String> temp = Util.friendList.get(player);
-						for(int i = 3; i < args.length; i++)
+						ArrayList<String> playersAdded = new ArrayList<String>();
+						if(temp != null)
+						{
+							for(int i = 1; i < args.length; i++)
 						{
 							temp.add(args[i]);
+							playersAdded.add(args[i]);
 						}
 						Util.friendList.put(player, temp);
+						player.sendMessage(ChatColor.GRAY + (playersAdded + " added to your friends list."));
+						}
 					}
 				}
 				
@@ -118,25 +126,39 @@ public class FriendList extends JavaPlugin {
 				{
 					if(args.length >= 1)
 					{
-						ArrayList<String> temp = Util.friendList.get(player);
-						for(int i = 3; i < args.length; i++)
+						if(!Util.friendList.containsKey(player))
 						{
-							temp.remove(args[i]);
+							ArrayList<String> temp = new ArrayList<String>();
+							Util.friendList.put(player, temp);
+							player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
+						}
+						ArrayList<String> temp = Util.friendList.get(player);
+						ArrayList<String> playersRemoved = new ArrayList<String>();
+						if(temp != null)
+						{
+							for(int i = 1; i < args.length; i++)
+						{
+							temp.add(args[i]);
+							playersRemoved.add(args[i]);
+						}
+						Util.friendList.put(player, temp);
+						player.sendMessage(ChatColor.GRAY + (playersRemoved + " removed to your friends list."));
 						}
 					}
 				}
-				if(args[0].equalsIgnoreCase("-clear") && args.length == 1)
+				if(args[0].equalsIgnoreCase("-clear") && args.length >= 1)
 				{
-					if(args[1].equalsIgnoreCase("-yes")) //-yes is simply an extra conformation from the user 
+					if(args[1].equalsIgnoreCase("-yes"))
 					{
 						ArrayList<String> temp = null;
 						try
 						{
 							Util.friendList.put(player, temp);
+							player.sendMessage(ChatColor.RED + "Your friend list has been cleared.");
 						}
 						catch (Exception ex)
 						{
-							player.sendMessage("Could not process your command, please try again or submit a Redmine entry");
+							player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 						}
 					}
 				}

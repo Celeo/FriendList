@@ -19,3 +19,11 @@ Created on May 28, 2011
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+Features:
+* A friend list with the following commands:
+	-show / -view / -see
+	-add
+	-remove
+	-clear
+* Only sends player login / logout message to online players with the player login in/out in their friend list.

@@ -19,7 +19,6 @@
 package net.thedarktide.celeo.friendlist;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -37,9 +36,12 @@ public class QuitListener extends PlayerListener {
 		
 		for(Player p : event.getPlayer().getServer().getOnlinePlayers())
 		{
-			if(Util.friendList.get(p).contains(player))
+			if(Util.friendList.get(p) != null)
 			{
-				p.sendMessage(player + " has logged out.");
+				if(Util.friendList.get(p).contains(player))
+				{
+					p.sendMessage(player + " has logged out.");
+				}
 			}
 		}
 	}

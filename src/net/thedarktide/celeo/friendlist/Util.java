@@ -25,9 +25,9 @@ import java.util.HashMap;
 
 public class Util {
 	
-	public final FriendList plugin;
-	
 	public static HashMap<Player, ArrayList<String>> friendList = new HashMap<Player, ArrayList<String>>();
+	
+	public final FriendList plugin;
 	
 	public Util(FriendList instance){
 		plugin = instance;

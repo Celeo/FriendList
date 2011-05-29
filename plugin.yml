@@ -4,5 +4,8 @@ author: Celeo
 version: 0.1
 commands:
   friendlist:
-    description: Commands
+    description: Plugin-specific commands
+    usage: /<command> <parameters>
+  friend:
+    description: Alias for /friendlist
     usage: /<command> <parameters>
