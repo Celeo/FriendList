@@ -25,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -47,7 +48,7 @@ public class FriendList extends JavaPlugin {
 		}
 		Util.config.save();
 	}
-
+	
 	@Override
 	public void onEnable() {
 		log.info("[Friend List] plugin <enabled>");
@@ -57,11 +58,18 @@ public class FriendList extends JavaPlugin {
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
 	}
 	
-	public static void sendMsg(Player player, String message) {
-		player.sendMessage(message);
+	public boolean isPlayerOnline(Player player, Server server) {
+		for(Player p : server.getOnlinePlayers())
+		{
+			if(p.equals(player))
+				return true;
+			break;
+		}
+		return false;
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+		Server server = sender.getServer();
 		if(sender instanceof Player)
 		{
 			Player player = (Player)sender;
@@ -76,7 +84,10 @@ public class FriendList extends JavaPlugin {
 						String list = "";
 						for(String str : Util.friendList.get(player.getDisplayName()))
 						{
-							list += str + " ";
+							if(isPlayerOnline(server.getPlayer(str), server))
+								list += ChatColor.GREEN + str + " ";
+							else
+								list += ChatColor.GRAY + str + " ";
 						}
 						if(list != "" || list != " ")
 							player.sendMessage(list);
@@ -152,22 +163,6 @@ public class FriendList extends JavaPlugin {
 					{
 						player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 					}
-				}
-				//-check
-				//tells the sender which of their friends is/are online
-				if(args[0].equalsIgnoreCase("-check"))
-				{
-					Player[] onlinePlayers = sender.getServer().getOnlinePlayers();
-					ArrayList<String> onlineFriends = new ArrayList<String>();
-					for(Player p : onlinePlayers)
-					{
-						if(Util.friendList.get(player.getDisplayName()).contains(p.getDisplayName()))
-						{
-							onlineFriends.add(p.getName());
-						}
-					}
-					player.sendMessage(ChatColor.GRAY + "The following people from your friend list are online:");
-					player.sendMessage(ChatColor.GRAY + onlineFriends.toString());
 				}
 			}
 		}
