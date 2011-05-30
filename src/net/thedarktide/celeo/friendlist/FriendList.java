@@ -39,7 +39,13 @@ public class FriendList extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		log.info("[Friend List] plugin <disabled>");
-		//save info
+		
+		//save master list
+		for(Player player : getServer().getOnlinePlayers())
+		{
+			Util.config.setProperty("list." + player.getDisplayName(), Util.friendList.get(player.getDisplayName()));
+		}
+		Util.config.save();
 	}
 
 	@Override
@@ -65,10 +71,10 @@ public class FriendList extends JavaPlugin {
 				//-see / -view / -show
 				if(args[0].equalsIgnoreCase("-see") || args[0].equalsIgnoreCase("-view") || args[0].equalsIgnoreCase("-show"))
 				{
-					if(Util.friendList.get(player) != null)
+					if(Util.friendList.get(player.getDisplayName()) != null)
 					{
 						String list = "";
-						for(String str : Util.friendList.get(player))
+						for(String str : Util.friendList.get(player.getDisplayName()))
 						{
 							list += str + " ";
 						}
@@ -87,12 +93,12 @@ public class FriendList extends JavaPlugin {
 				{
 					if(args.length >= 1)
 					{
-						if(!Util.friendList.containsKey(player))
+						if(!Util.friendList.containsKey(player.getDisplayName()))
 						{
 							ArrayList<String> temp = new ArrayList<String>();
-							Util.friendList.put(player, temp);
+							Util.friendList.put(player.getDisplayName(), temp);
 						}
-						ArrayList<String> temp = Util.friendList.get(player);
+						ArrayList<String> temp = Util.friendList.get(player.getDisplayName());
 						ArrayList<String> playersAdded = new ArrayList<String>();
 						if(temp != null)
 						{
@@ -101,7 +107,7 @@ public class FriendList extends JavaPlugin {
 							temp.add(args[i]);
 							playersAdded.add(args[i]);
 						}
-						Util.friendList.put(player, temp);
+						Util.friendList.put(player.getDisplayName(), temp);
 						player.sendMessage(ChatColor.GRAY + (playersAdded + " added to your friends list."));
 						}
 					}
@@ -111,15 +117,15 @@ public class FriendList extends JavaPlugin {
 				{
 					if(args.length >= 1)
 					{
-						if(!Util.friendList.containsKey(player))
+						if(!Util.friendList.containsKey(player.getDisplayName()))
 						{
 							ArrayList<String> temp = new ArrayList<String>();
-							Util.friendList.put(player, temp);
+							Util.friendList.put(player.getDisplayName(), temp);
 							player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 						}
 						else
 						{
-							ArrayList<String> temp = Util.friendList.get(player);
+							ArrayList<String> temp = Util.friendList.get(player.getDisplayName());
 							ArrayList<String> playersRemoved = new ArrayList<String>();
 							if(temp != null)
 							{
@@ -128,7 +134,7 @@ public class FriendList extends JavaPlugin {
 								temp.remove(args[i]);
 								playersRemoved.add(args[i]);
 							}
-							Util.friendList.put(player, temp);
+							Util.friendList.put(player.getDisplayName(), temp);
 							player.sendMessage(ChatColor.GRAY + (playersRemoved + " removed to your friends list."));
 							}
 						}
@@ -139,7 +145,7 @@ public class FriendList extends JavaPlugin {
 				{
 					try
 					{
-						Util.friendList.put(player, null);
+						Util.friendList.put(player.getDisplayName(), null);
 						player.sendMessage(ChatColor.RED + "Your friend list has been cleared.");
 					}
 					catch (Exception ex)
@@ -155,7 +161,7 @@ public class FriendList extends JavaPlugin {
 					ArrayList<String> onlineFriends = new ArrayList<String>();
 					for(Player p : onlinePlayers)
 					{
-						if(Util.friendList.get(player).contains(p.getName()))
+						if(Util.friendList.get(player.getDisplayName()).contains(p.getDisplayName()))
 						{
 							onlineFriends.add(p.getName());
 						}

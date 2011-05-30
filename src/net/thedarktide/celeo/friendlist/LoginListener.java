@@ -34,7 +34,7 @@ public class LoginListener extends PlayerListener {
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		String name = player.getName();
+		String name = player.getDisplayName();
 		event.setJoinMessage(null);
 		
 		//load player information from config.yml
@@ -42,7 +42,7 @@ public class LoginListener extends PlayerListener {
 		{
 			ArrayList<String> allFriends = null;
 			allFriends = (ArrayList<String>) Util.config.getStringList("list." + name, allFriends);
-			Util.friendList.put(player, allFriends);
+			Util.friendList.put(player.getDisplayName(), allFriends);
 		}
 		catch (Exception ex)
 		{
@@ -52,11 +52,11 @@ public class LoginListener extends PlayerListener {
 		//tell everyone who has this person in their friend list that he/she logged in
 		for(Player playersOnline : event.getPlayer().getServer().getOnlinePlayers())
 		{
-			if(Util.friendList.get(playersOnline) != null)
+			if(Util.friendList.get(playersOnline.getDisplayName()) != null)
 			{
-				if(Util.friendList.get(playersOnline).contains(player))
+				if(Util.friendList.get(playersOnline.getDisplayName()).contains(player.getDisplayName()))
 				{
-					playersOnline.sendMessage(player + " has logged in.");
+					playersOnline.sendMessage(player.getDisplayName() + " has logged in.");
 				}
 			}
 		}

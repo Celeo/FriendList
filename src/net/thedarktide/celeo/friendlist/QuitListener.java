@@ -32,17 +32,17 @@ public class QuitListener extends PlayerListener {
 	
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		String name = player.getName();
+		String name = player.getDisplayName();
 		event.setQuitMessage(null);
 		
 		try
 		{
 			//save player's information
-			Util.config.setProperty("list." + name, Util.friendList.get(player));
+			Util.config.setProperty("list." + name, Util.friendList.get(player.getDisplayName()));
 			Util.config.save();
 			
 			//remove player from master list
-			Util.friendList.remove(player.getName());
+			Util.friendList.remove(player.getDisplayName());
 		}
 		catch (Exception ex)
 		{
@@ -52,11 +52,11 @@ public class QuitListener extends PlayerListener {
 		//tell everyone who has this person in their friend list that he/she logged out
 		for(Player playersOnline : event.getPlayer().getServer().getOnlinePlayers())
 		{
-			if(Util.friendList.get(playersOnline) != null)
+			if(Util.friendList.get(playersOnline.getDisplayName()) != null)
 			{
-				if(Util.friendList.get(playersOnline).contains(player))
+				if(Util.friendList.get(playersOnline.getDisplayName()).contains(player.getDisplayName()))
 				{
-					playersOnline.sendMessage(player + " has logged out.");
+					playersOnline.sendMessage(player.getDisplayName() + " has logged out.");
 				}
 			}
 		}

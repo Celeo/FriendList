@@ -18,7 +18,6 @@
 
 package net.thedarktide.celeo.friendlist;
 
-import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 import java.io.File;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 
 public class Util {
 	
-	public static HashMap<Player, ArrayList<String>> friendList = new HashMap<Player, ArrayList<String>>();
+	public static HashMap<String, ArrayList<String>> friendList = new HashMap<String, ArrayList<String>>();
 	
 	public static Configuration config;
 	protected static File dataFolder;
