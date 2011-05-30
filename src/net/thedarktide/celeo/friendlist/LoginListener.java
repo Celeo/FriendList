@@ -50,13 +50,13 @@ public class LoginListener extends PlayerListener {
 		}
 		
 		//tell everyone who has this person in their friend list that he/she logged in
-		for(Player p : event.getPlayer().getServer().getOnlinePlayers())
+		for(Player playersOnline : event.getPlayer().getServer().getOnlinePlayers())
 		{
-			if(Util.friendList.get(p) != null)
+			if(Util.friendList.get(playersOnline) != null)
 			{
-				if(Util.friendList.get(p).contains(player))
+				if(Util.friendList.get(playersOnline).contains(player))
 				{
-					p.sendMessage(player + " has logged in.");
+					playersOnline.sendMessage(player + " has logged in.");
 				}
 			}
 		}
