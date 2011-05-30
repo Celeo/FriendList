@@ -82,6 +82,7 @@ public class FriendList extends JavaPlugin {
 			Player player = (Player)sender;
 			if((commandLabel.equalsIgnoreCase("friend") || commandLabel.equalsIgnoreCase("friendlist")) && args.length >= 0)
 			{
+				//-see / -view / -show
 				if(args[0].equalsIgnoreCase("-see") || args[0].equalsIgnoreCase("-view") || args[0].equalsIgnoreCase("show"))
 				{
 					if(Util.friendList.get(player) != null)
@@ -99,7 +100,7 @@ public class FriendList extends JavaPlugin {
 						player.sendMessage(ChatColor.RED + "You don't have any people in your friend list.");
 					}
 				}
-				
+				//-a|dd
 				if(args[0].equalsIgnoreCase("-a") || args[0].equalsIgnoreCase("-add"))
 				{
 					if(args.length >= 1)
@@ -123,7 +124,7 @@ public class FriendList extends JavaPlugin {
 						}
 					}
 				}
-				
+				//-rem|ove
 				if(args[0].equalsIgnoreCase("-rem") || args[0].equalsIgnoreCase("-remove"))
 				{
 					if(args.length >= 1)
@@ -151,30 +152,30 @@ public class FriendList extends JavaPlugin {
 						}
 					}
 				}
-				if(args[0].equalsIgnoreCase("-clear") && args.length >= 1)
+				//-clear
+				if(args[0].equalsIgnoreCase("-clear"))
 				{
-					if(args[1].equalsIgnoreCase("-yes"))
+					try
 					{
-						ArrayList<String> temp = null;
-						try
-						{
-							Util.friendList.put(player, temp);
-							player.sendMessage(ChatColor.RED + "Your friend list has been cleared.");
-						}
-						catch (Exception ex)
-						{
-							player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
-						}
+						Util.friendList.put(player, null);
+						player.sendMessage(ChatColor.RED + "Your friend list has been cleared.");
+					}
+					catch (Exception ex)
+					{
+						player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 					}
 				}
+				//-save
 				if(args[0].equalsIgnoreCase("-save"))// && Permissions.has(player, "friendlist.save"))
 				{
 					Util.saveList();
 					player.sendMessage(ChatColor.GRAY + "Friend Lists saved.");
 				}
+				
+				//-load
 				if(args[0].equalsIgnoreCase("-load"))// && Permissions.has(player, "friendlist.load"))
 				{
-					Util.loadList();
+					Util.loadList(sender.getServer());
 					player.sendMessage(ChatColor.GRAY + "Friend Lists loaded.");
 				}
 			}
