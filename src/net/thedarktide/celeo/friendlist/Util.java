@@ -18,24 +18,21 @@
 
 package net.thedarktide.celeo.friendlist;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.util.config.Configuration;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 public class Util {
 	
 	public static HashMap<Player, ArrayList<String>> friendList = new HashMap<Player, ArrayList<String>>();
 	
-	private static Configuration config;
+	public static Configuration config;
 	protected static File dataFolder;
 	
-		public static FriendList plugin;
+	public static FriendList plugin;
 	
 	public Util(FriendList instance) {
 		plugin = instance;
@@ -44,30 +41,6 @@ public class Util {
 	public static void load(FriendList plugin) {
 		config = plugin.getConfiguration();
 		dataFolder = plugin.getDataFolder();
-	}
-	
-	public static void saveList() {
-		config.setProperty("info.total", friendList.size());
-		ArrayList<String> temp = new ArrayList<String>();
-		for(Entry<Player, ArrayList<String>> str : friendList.entrySet())
-		{
-			temp.add(str.getKey().getName());
-		}
-		config.setProperty("info.allplayers", temp);
-		for(Entry<Player, ArrayList<String>> str : friendList.entrySet())
-		{
-			config.setProperty("list." + str.getKey().getName(), str.getValue());
-		}
-		config.save();
-	}
-	
-	public static void loadList(Server server) {
-			int total = (Integer) config.getProperty("info.total");
-			List<String> allPlayers = config.getKeys("info.allplayers");
-			if(allPlayers != null)
-			{
-				FriendList.log.info("All Players: " + allPlayers);
-			}
 	}
 	
 }

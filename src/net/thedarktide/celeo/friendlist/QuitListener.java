@@ -30,10 +30,26 @@ public class QuitListener extends PlayerListener {
 		plugin = instance;
 	}
 	
-	public void onPlayerJoin(PlayerQuitEvent event) {
+	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		String name = player.getName();
 		event.setQuitMessage(null);
 		
+		try
+		{
+			//save player's information
+			Util.config.setProperty("list." + name, Util.friendList.get(player));
+			Util.config.save();
+			
+			//remove player from master list
+			Util.friendList.remove(player.getName());
+		}
+		catch (Exception ex)
+		{
+			FriendList.log.info("Error with the saving of " + name + "'s friend list.");
+		}
+		
+		//tell everyone who has this person in their friend list that he/she logged out
 		for(Player p : event.getPlayer().getServer().getOnlinePlayers())
 		{
 			if(Util.friendList.get(p) != null)
@@ -45,5 +61,5 @@ public class QuitListener extends PlayerListener {
 			}
 		}
 	}
-		
+	
 }
