@@ -147,6 +147,22 @@ public class FriendList extends JavaPlugin {
 						player.sendMessage(ChatColor.RED + "You do not have anyone in your friend list.");
 					}
 				}
+				//-check
+				//tells the sender which of their friends is/are online
+				if(args[0].equalsIgnoreCase("-check"))
+				{
+					Player[] onlinePlayers = sender.getServer().getOnlinePlayers();
+					ArrayList<String> onlineFriends = new ArrayList<String>();
+					for(Player p : onlinePlayers)
+					{
+						if(Util.friendList.get(player).contains(p.getName()))
+						{
+							onlineFriends.add(p.getName());
+						}
+					}
+					player.sendMessage(ChatColor.GRAY + "The following people from your friend list are online:");
+					player.sendMessage(ChatColor.GRAY + onlineFriends.toString());
+				}
 			}
 		}
 		return true;
