@@ -37,16 +37,28 @@ public class LoginListener extends PlayerListener {
 		String name = player.getDisplayName();
 		event.setJoinMessage(null);
 		
-		//load player information from config.yml
+		//load friends from config.yml
 		try
 		{
 			ArrayList<String> allFriends = null;
-			allFriends = (ArrayList<String>) Util.config.getStringList("list." + name, allFriends);
+			allFriends = (ArrayList<String>) Util.config.getStringList("friend." + name, allFriends);
 			Util.friendList.put(player.getDisplayName(), allFriends);
 		}
 		catch (Exception ex)
 		{
 			FriendList.log.info("Error with the loading of " + name + "'s friend list.");
+		}
+		
+		//load enemies from config.yml
+		try
+		{
+			ArrayList<String> allEnemies = null;
+			allEnemies = (ArrayList<String>) Util.config.getStringList("enemy." + name, allEnemies);
+			Util.enemyList.put(player.getDisplayName(), allEnemies);
+		}
+		catch (Exception ex)
+		{
+			FriendList.log.info("Error with the loading of " + name + "'s enemy list.");
 		}
 		
 		//tell everyone who has this person in their friend list that he/she logged in

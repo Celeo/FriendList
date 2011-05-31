@@ -27,6 +27,7 @@ import java.util.HashMap;
 public class Util {
 	
 	public static HashMap<String, ArrayList<String>> friendList = new HashMap<String, ArrayList<String>>();
+	public static HashMap<String, ArrayList<String>> enemyList = new HashMap<String, ArrayList<String>>();
 	
 	public static Configuration config;
 	protected static File dataFolder;
