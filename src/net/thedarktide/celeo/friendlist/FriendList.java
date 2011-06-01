@@ -40,6 +40,7 @@ public class FriendList extends JavaPlugin {
 	public static ChatColor cgreen = ChatColor.GREEN;
 	public static ChatColor cwhite = ChatColor.WHITE;
 	public static ChatColor cred = ChatColor.RED;
+	public static ChatColor cgray = ChatColor.GRAY;
 	
 	@Override
 	public void onDisable() {
@@ -83,6 +84,22 @@ public class FriendList extends JavaPlugin {
 			if((commandLabel.equalsIgnoreCase("friend") || commandLabel.equalsIgnoreCase("friendlist")
 					|| commandLabel.equalsIgnoreCase("friends")) && args.length >= 0)
 			{
+				//blank / -h / -help
+				
+				if(args[0].equalsIgnoreCase("") || args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help"))
+				{
+					player.sendMessage(ChatColor.GOLD + "Friend/Enemy List Commands:");
+					player.sendMessage(ChatColor.BLACK + "==================================================");
+					player.sendMessage(cgray + "/friend|s|list or /enemy|s|list");
+					player.sendMessage(cgray + "-see / -show / -view" + cwhite + " : Shows the list");
+					player.sendMessage(cwhite + "Offline players are in white, while online players will be in");
+					player.sendMessage(cgreen + "green " + cwhite + "or " + cred + "red" + cwhite + ", depending on which list they belong to.");
+					player.sendMessage(cgray + "-a|dd [name(s)]" + cwhite + " : Adds the people to your list");
+					player.sendMessage(cgray + "-rem|ove [name(s)]" + cwhite + " : Removes the people from your list");
+					player.sendMessage(cgray + "-clear" + cwhite + " : Clears your list");
+					player.sendMessage(ChatColor.BLACK + "==================================================");
+				}
+				
 				//-see / -view / -show
 				if(args[0].equalsIgnoreCase("-see") || args[0].equalsIgnoreCase("-view") || args[0].equalsIgnoreCase("-show") || args[0].equalsIgnoreCase("-list"))
 				{
