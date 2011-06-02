@@ -46,7 +46,7 @@ public class FriendList extends JavaPlugin {
 	public void onDisable() {
 		log.info("[Friend List] plugin <disabled>");
 		
-		//save master list
+		//save master lists
 		for(Player player : getServer().getOnlinePlayers())
 		{
 			Util.config.setProperty("friend." + player.getDisplayName(), Util.friendList.get(player.getDisplayName()));

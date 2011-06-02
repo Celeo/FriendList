@@ -1,7 +1,7 @@
 name: FriendList
 main: net.thedarktide.celeo.friendlist.FriendList
 author: Celeo
-version: 1.6
+version: 1.3_3
 commands:
   friendlist:
     description: Plugin-specific commands
