@@ -1,6 +1,0 @@
-Errors
-=========================
-
--Make it so a player can only be added ONCE to a list. Can't add them if they are already there.
--When adding / checking for players, make it case insensitive.
-	- Try to save the player into the list case-correct
