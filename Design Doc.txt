@@ -1,10 +1,11 @@
 === Design Doc ===
 
 === Commands ===
-/friendlist -see / -view / -show : Shows the player's friend list, returns a message if empty or null
-/friendlist -a|dd : Adds [player(s)] to the friend list
-/friendlist -rem|ove : Removes  [player(s)] from the friend list
-/friendlist -clear : Clears friend list
+/friend|s|list or /enemy|list : Specifies which list
+	-see / -view / -show : Shows the player's list, returns a message if empty or null
+	-a|dd : Adds [player(s)] to the list
+	-r|em|ove : Removes  [player(s)] from the list
+	-clear : Clears list
 
 === Other Features ===
 Only sends player login / logout message to online players with the player login in/out in their friend list.
