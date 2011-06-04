@@ -23,4 +23,5 @@ Features:
 	-add
 	-remove
 	-clear
+	-tp (Friend list specific)
 * Only sends player login / logout message to online players with the player login in/out in their friend list.

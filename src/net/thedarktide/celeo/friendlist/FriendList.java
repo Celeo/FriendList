@@ -1,21 +1,3 @@
-/*
- * FriendList
- * Copyright (C) 2011 Celeo <celeodor@gmail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package net.thedarktide.celeo.friendlist;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,6 +18,7 @@ public class FriendList extends JavaPlugin {
 	
 	public LoginListener loginListener = new LoginListener(this);
 	public QuitListener quitListener = new QuitListener(this);
+//	public DamageListener damageListener = new DamageListener(this);
 	
 	public static ChatColor cgreen = ChatColor.GREEN;
 	public static ChatColor cwhite = ChatColor.WHITE;
@@ -45,13 +28,12 @@ public class FriendList extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		log.info("[Friend List] plugin <disabled>");
-		
-		//save master lists
 		for(Player player : getServer().getOnlinePlayers())
 		{
 			Util.config.setProperty("friend." + player.getDisplayName(), Util.friendList.get(player.getDisplayName()));
 			Util.config.setProperty("enemy." + player.getDisplayName(), Util.enemyList.get(player.getDisplayName()));
 		}
+		Util.config.setProperty("teleport.", Util.canTeleport);
 		Util.config.save();
 	}
 	
@@ -62,6 +44,7 @@ public class FriendList extends JavaPlugin {
 		PluginManager mngr = getServer().getPluginManager();
 		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
+//		mngr.registerEvent(Event.Type.ENTITY_DAMAGE, this.damageListener, Event.Priority.Normal, this);
 	}
 	
 	public boolean isPlayerOnline(Player player, Server server) {
@@ -224,6 +207,22 @@ public class FriendList extends JavaPlugin {
 							player.sendMessage(cred + "You do not have anyone in your friend list.");
 						}
 					}
+					if(args[0].equalsIgnoreCase("-tp") && Util.canTeleport == true)
+					{
+						if(args.length >= 1)
+						{
+							Player p = sender.getServer().getPlayer(args[1]);
+							if(Util.friendList.get(player.getDisplayName()).contains(args[1])
+									&& Util.friendList.get(args[1]).contains(player.getDisplayName()))
+							{
+								TP(player, p);
+							}
+							else
+							{
+								player.sendMessage(cred + "Either that player is not in your friend list or you are not in his/hers.");
+							}
+						}
+					}
 				}
 			}
 			
@@ -363,6 +362,11 @@ public class FriendList extends JavaPlugin {
 			
 		}
 		return true;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void TP(Player traveler, Player travelTo) {
+		traveler.teleportTo(travelTo);
 	}
 
 }
