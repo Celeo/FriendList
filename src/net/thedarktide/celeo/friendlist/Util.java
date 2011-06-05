@@ -12,6 +12,7 @@ public class Util {
 	public static HashMap<String, ArrayList<String>> enemyList = new HashMap<String, ArrayList<String>>();
 	
 	public static boolean canTeleport = false;
+	public static boolean friendlyFireBlock = false;
 	
 	public static Configuration config;
 	protected static File dataFolder;
@@ -26,6 +27,7 @@ public class Util {
 		config = plugin.getConfiguration();
 		dataFolder = plugin.getDataFolder();
 		canTeleport = config.getBoolean("teleport.", canTeleport);
+		friendlyFireBlock = config.getBoolean("friendlyFire.", friendlyFireBlock);
 	}
 	
 }

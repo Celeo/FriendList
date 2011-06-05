@@ -18,7 +18,7 @@ public class FriendList extends JavaPlugin {
 	
 	public LoginListener loginListener = new LoginListener(this);
 	public QuitListener quitListener = new QuitListener(this);
-//	public DamageListener damageListener = new DamageListener(this);
+	public DamageListener damageListener = new DamageListener(this);
 	
 	public static ChatColor cgreen = ChatColor.GREEN;
 	public static ChatColor cwhite = ChatColor.WHITE;
@@ -27,24 +27,25 @@ public class FriendList extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		log.info("[Friend List] plugin <disabled>");
+		log.info("[Friend List] <disabled>");
 		for(Player player : getServer().getOnlinePlayers())
 		{
 			Util.config.setProperty("friend." + player.getDisplayName(), Util.friendList.get(player.getDisplayName()));
 			Util.config.setProperty("enemy." + player.getDisplayName(), Util.enemyList.get(player.getDisplayName()));
 		}
 		Util.config.setProperty("teleport.", Util.canTeleport);
+		Util.config.setProperty("friendlyFire", Util.friendlyFireBlock);
 		Util.config.save();
 	}
 	
 	@Override
 	public void onEnable() {
-		log.info("[Friend List] plugin <enabled>");
+		log.info("[Friend List] by Celeo <enabled>");
 		Util.load(this);
 		PluginManager mngr = getServer().getPluginManager();
 		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
-//		mngr.registerEvent(Event.Type.ENTITY_DAMAGE, this.damageListener, Event.Priority.Normal, this);
+		mngr.registerEvent(Event.Type.ENTITY_DAMAGE, this.damageListener, Event.Priority.Normal, this);
 	}
 	
 	public boolean isPlayerOnline(Player player, Server server) {
