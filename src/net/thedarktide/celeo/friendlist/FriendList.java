@@ -9,12 +9,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 
+import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
+import org.bukkit.plugin.Plugin;
+
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class FriendList extends JavaPlugin {
 	
 	public static final Logger log = Logger.getLogger("Minecraft");
+	
+	public static PermissionHandler Permissions;
 	
 	public LoginListener loginListener = new LoginListener(this);
 	public QuitListener quitListener = new QuitListener(this);
@@ -40,13 +46,26 @@ public class FriendList extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		log.info("[Friend List] by Celeo <enabled>");
+		log.info("[Friend List] <enabled>");
+		setupPermissions();
 		Util.load(this);
 		PluginManager mngr = getServer().getPluginManager();
 		mngr.registerEvent(Event.Type.PLAYER_JOIN, this.loginListener, Event.Priority.Normal, this);
 		mngr.registerEvent(Event.Type.PLAYER_QUIT, this.quitListener, Event.Priority.Normal, this);
 		mngr.registerEvent(Event.Type.ENTITY_DAMAGE, this.damageListener, Event.Priority.Normal, this);
 	}
+	
+	public void setupPermissions() {
+	    Plugin test = getServer().getPluginManager().getPlugin("Permissions");
+	    if (Permissions == null)
+	      if (test != null) {
+	        getServer().getPluginManager().enablePlugin(test);
+	        Permissions = ((Permissions)test).getHandler();
+	      } else {
+	        log.info("[FriendList] requires Permissions, disabling...");
+	        getServer().getPluginManager().disablePlugin(this);
+	      }
+	  }
 	
 	public boolean isPlayerOnline(Player player, Server server) {
 		for(Player p : server.getOnlinePlayers())
@@ -113,11 +132,11 @@ public class FriendList extends JavaPlugin {
 							if(list != "" || list != " ")
 								player.sendMessage(list);
 							else
-								player.sendMessage(cred + "You don't have any people in your friend list.");
+								player.sendMessage(cred + "You don't have any players in your friend list.");
 						}
 						else
 						{
-							player.sendMessage(cred + "You don't have any people in your friend list.");
+							player.sendMessage(cred + "You don't have any players in your friend list.");
 						}
 					}
 					//-a|dd
@@ -141,10 +160,10 @@ public class FriendList extends JavaPlugin {
 								if(temp != null)
 								{
 									for(int i = 1; i < args.length; i++)
-								{
-									temp.add(args[i]);
-									playersAdded.add(args[i]);
-								}
+									{
+										temp.add(args[i]);
+										playersAdded.add(args[i]);
+									}
 								Util.friendList.put(player.getDisplayName(), temp);
 								player.sendMessage(ChatColor.GRAY + (playersAdded + " added to your friends list."));
 								Util.config.setProperty("friend." + player.getDisplayName(), Util.friendList.get(player.getDisplayName()));
@@ -263,11 +282,11 @@ public class FriendList extends JavaPlugin {
 							if(list != "" || list != " ")
 								player.sendMessage(list);
 							else
-								player.sendMessage(cred + "You don't have any people in your enemy list.");
+								player.sendMessage(cred + "You don't have any players in your enemy list.");
 						}
 						else
 						{
-							player.sendMessage(cred + "You don't have any people in your enemy list.");
+							player.sendMessage(cred + "You don't have any players in your enemy list.");
 						}
 					}
 					//-a|dd
@@ -360,7 +379,34 @@ public class FriendList extends JavaPlugin {
 					}
 				}
 			}
-			
+			//admin commands
+			if((commandLabel.equalsIgnoreCase("friendadmin") || commandLabel.equalsIgnoreCase("enemyadmin")) && Permissions.has(player, "friendList.admin"))
+			{
+				if(args[0].equalsIgnoreCase("-del") && args.length >= 3)
+				{
+					if(args[1].equalsIgnoreCase("-f") || args[1].equalsIgnoreCase("-friend") ||
+							args[1].equalsIgnoreCase("-friendlist"))
+					{
+						if(Util.friendList.containsKey(args[2]))
+							Util.friendList.remove(args[2]);
+					}
+					else if(args[1].equalsIgnoreCase("-e") || args[1].equalsIgnoreCase("-enemy") ||
+							args[1].equalsIgnoreCase("-enemylist"))
+					{
+						if(Util.enemyList.containsKey(args[2]))
+							Util.enemyList.remove(args[2]);
+					}
+				}
+				if(args[0].equalsIgnoreCase("-removeplayer") && args.length >= 2)
+				{
+					Player p = server.getPlayer(args[1]);
+					for(Player plr : server.getOnlinePlayers())
+					{
+						if(Util.friendList.get(plr).contains(args[2]))
+							Util.friendList.get(plr).remove(args[2]);
+					}
+				}
+			}
 		}
 		return true;
 	}
@@ -368,6 +414,50 @@ public class FriendList extends JavaPlugin {
 	@SuppressWarnings("deprecation")
 	public void TP(Player traveler, Player travelTo) {
 		traveler.teleportTo(travelTo);
+	}
+	
+	/*
+	*Methods for getting information from plugin
+	*/
+	
+	//returns true if player b is in player a's friendlist
+	public boolean checkFriend(Player a, Player b) {
+		if(Util.friendList.containsKey(a))
+		{
+			return Util.friendList.get(a).contains(b);
+		}
+		else
+			return false;
+	}
+	
+	//returns true if player b is in player a's enemylist
+	public boolean checkEnemy(Player a, Player b) {
+		if(Util.enemyList.containsKey(a))
+		{
+			return Util.enemyList.get(a).contains(b);
+		}
+		else
+			return false;
+	}
+	
+	//returns the arraylist of friends for a player
+	public ArrayList<String> getFriendList(Player a) {
+		if(Util.friendList.containsKey(a))
+		{
+			return Util.friendList.get(a);
+		}
+		else
+			return null;
+	}
+	
+	//returns the arraylist of enemies for a player
+	public ArrayList<String> getEnemyList(Player a) {
+		if(Util.enemyList.containsKey(a))
+		{
+			return Util.enemyList.get(a);
+		}
+		else
+			return null;
 	}
 
 }
