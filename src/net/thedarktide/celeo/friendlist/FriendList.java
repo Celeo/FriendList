@@ -227,6 +227,7 @@ public class FriendList extends JavaPlugin {
 							player.sendMessage(cred + "You do not have anyone in your friend list.");
 						}
 					}
+					//-tp
 					if(args[0].equalsIgnoreCase("-tp") && Util.canTeleport == true)
 					{
 						if(args.length >= 1)
@@ -411,9 +412,8 @@ public class FriendList extends JavaPlugin {
 		return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void TP(Player traveler, Player travelTo) {
-		traveler.teleportTo(travelTo);
+		traveler.teleport(travelTo);
 	}
 	
 	/*
