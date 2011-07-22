@@ -67,12 +67,11 @@ public class FriendList extends JavaPlugin {
 	      }
 	  }
 	
-	public boolean isPlayerOnline(Player player, Server server) {
-		for(Player p : server.getOnlinePlayers())
+	public boolean isPlayerOnline(String player) {
+		for(Player p : this.getServer().getOnlinePlayers())
 		{
-			if(p.equals(player))
+			if(p.getDisplayName().equalsIgnoreCase(player))
 				return true;
-			break;
 		}
 		return false;
 	}
@@ -124,7 +123,7 @@ public class FriendList extends JavaPlugin {
 							String list = cgreen + "Friend list: " + cwhite;
 							for(String str : Util.friendList.get(player.getDisplayName()))
 							{
-								if(isPlayerOnline(server.getPlayer(str), server))
+								if(isPlayerOnline(str))
 									list += cgreen + str + " ";
 								else
 									list += cwhite + str + " ";
@@ -275,7 +274,7 @@ public class FriendList extends JavaPlugin {
 							String list = cred + "Enemy list: " + cwhite;
 							for(String str : Util.enemyList.get(player.getDisplayName()))
 							{
-								if(isPlayerOnline(server.getPlayer(str), server))
+								if(isPlayerOnline(str))
 									list += cred + str + " ";
 								else
 									list += cwhite + str + " ";
@@ -380,34 +379,6 @@ public class FriendList extends JavaPlugin {
 					}
 				}
 			}
-			//admin commands
-			if((commandLabel.equalsIgnoreCase("friendadmin") || commandLabel.equalsIgnoreCase("enemyadmin")) && Permissions.has(player, "friendList.admin"))
-			{
-				if(args[0].equalsIgnoreCase("-del") && args.length >= 3)
-				{
-					if(args[1].equalsIgnoreCase("-f") || args[1].equalsIgnoreCase("-friend") ||
-							args[1].equalsIgnoreCase("-friendlist"))
-					{
-						if(Util.friendList.containsKey(args[2]))
-							Util.friendList.remove(args[2]);
-					}
-					else if(args[1].equalsIgnoreCase("-e") || args[1].equalsIgnoreCase("-enemy") ||
-							args[1].equalsIgnoreCase("-enemylist"))
-					{
-						if(Util.enemyList.containsKey(args[2]))
-							Util.enemyList.remove(args[2]);
-					}
-				}
-				if(args[0].equalsIgnoreCase("-removeplayer") && args.length >= 2)
-				{
-					Player p = server.getPlayer(args[1]);
-					for(Player plr : server.getOnlinePlayers())
-					{
-						if(Util.friendList.get(plr).contains(args[2]))
-							Util.friendList.get(plr).remove(args[2]);
-					}
-				}
-			}
 		}
 		return true;
 	}
@@ -416,48 +387,4 @@ public class FriendList extends JavaPlugin {
 		traveler.teleport(travelTo);
 	}
 	
-	/*
-	*Methods for getting information from plugin
-	*/
-	
-	//returns true if player b is in player a's friendlist
-	public boolean checkFriend(Player a, Player b) {
-		if(Util.friendList.containsKey(a))
-		{
-			return Util.friendList.get(a).contains(b);
-		}
-		else
-			return false;
-	}
-	
-	//returns true if player b is in player a's enemylist
-	public boolean checkEnemy(Player a, Player b) {
-		if(Util.enemyList.containsKey(a))
-		{
-			return Util.enemyList.get(a).contains(b);
-		}
-		else
-			return false;
-	}
-	
-	//returns the arraylist of friends for a player
-	public ArrayList<String> getFriendList(Player a) {
-		if(Util.friendList.containsKey(a))
-		{
-			return Util.friendList.get(a);
-		}
-		else
-			return null;
-	}
-	
-	//returns the arraylist of enemies for a player
-	public ArrayList<String> getEnemyList(Player a) {
-		if(Util.enemyList.containsKey(a))
-		{
-			return Util.enemyList.get(a);
-		}
-		else
-			return null;
-	}
-
 }

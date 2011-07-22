@@ -1,6 +1,6 @@
 name: FriendList
 author: Celeo
-version: 1.7
+version: 1.8
 main: net.thedarktide.celeo.friendlist.FriendList
 commands:
   friendlist:
